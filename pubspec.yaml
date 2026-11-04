@@ -1,0 +1,27 @@
+name: frizeraj_workspace
+description: Frizeraj multiplatformski sistem
+publish_to: none
+
+# Workspace-level test and preview runner must collect both clients' assets.
+dev_dependencies:
+  backoffice: any
+  flutter:
+    sdk: flutter
+  flutter_test:
+    sdk: flutter
+  mobile: any
+  use_cases: any
+
+flutter:
+  uses-material-design: true
+
+environment:
+  sdk: ^3.13.5
+
+workspace:
+  - apps/mobile
+  - apps/backoffice
+  - packages/domain
+  - packages/use_cases
+  - packages/blocs
+  - packages/ui

@@ -1,0 +1,11 @@
+.dart_tool/
+build/
+**/.dart_tool/
+**/build/
+.idea/
+*.iml
+**/android/local.properties
+**/android/.gradle/
+**/android/.kotlin/
+**/flutter/ephemeral/
+**/windows/flutter/generated_*
