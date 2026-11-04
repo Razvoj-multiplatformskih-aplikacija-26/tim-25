@@ -1,56 +1,102 @@
-# tim-25
-# Frizeraj – Sistem za upravljanje redom čekanja u frizerskim salonima
+# Frizeraj
 
-Frizeraj je multiplatformski sistem za digitalno upravljanje redom čekanja u frizerskim salonima koji rade bez prethodnog zakazivanja. Klijenti putem mobilne aplikacije pregledaju salone, dostupne usluge i trenutno stanje reda čekanja, prijavljuju se u red i prate svoju poziciju i status prijave. Kada se frizer oslobodi, server automatski određuje sledećeg klijenta na osnovu redosleda prijavljivanja i usluga koje frizer može da obavi. Osoblje putem backoffice aplikacije prati red čekanja, upravlja dostupnošću frizera, poziva dodeljene klijente i evidentira završetak usluga.
+<img src="packages/ui/assets/branding/logo.png" width="96" alt="Frizeraj logo">
+
+Sistem za red čekanja u frizerskim salonima, bez zakazivanja termina. Klijenti preko mobilne aplikacije pregledaju salone, biraju uslugu i prijavljuju se u red. Osoblje prati prijave, upravlja dostupnošću frizera i beleži početak i završetak usluge.
+
+Projekat iz predmeta Razvoj multiplatformskih aplikacija, tim 25.
 
 ## Tim
 
-| Ime i prezime  | Broj indeksa | GitHub nalog                                    |
-| -------------- | ------------ | ----------------------------------------------- |
-| Boris Bošković | SI 114/24    | [CoolGitGuy](https://github.com/CoolGitGuy)     |
-| Filip Karadžić | SI 131/24    | [StaticVoid-0](https://github.com/StaticVoid-0) |
+| Ime i prezime | Broj indeksa | GitHub nalog |
+| --- | --- | --- |
+| Boris Bošković | SI 114/24 | [@CoolGitGuy](https://github.com/CoolGitGuy) |
+| Filip Karadžić | SI 131/24 | [@StaticVoid-0](https://github.com/StaticVoid-0) |
 
 ## Zahtevi za temu
 
-Glavni pojam sistema je **prijava klijenta u red čekanja**.
+Glavni pojam sistema je **prijava u red** za određeni salon i uslugu.
 
-### 1. Uloge
-
-Sistem koriste klijenti i osoblje frizerskih salona. Klijenti pregledaju usluge i trenutno stanje reda čekanja, prijavljuju se u red, prate svoju poziciju i mogu da otkažu sopstvenu prijavu. Osoblje prati red čekanja, upravlja dostupnošću frizera, pokreće pozivanje sledećeg klijenta i evidentira početak i završetak pružanja usluge.
-
-### 2. Stanja
-
-Prijava u red čekanja prolazi kroz stanja: **na čekanju, pozvan, u toku, završen, otkazan i nije se pojavio**. Nakon prijavljivanja klijent čeka svoj red. Kada sistem pronađe odgovarajućeg slobodnog frizera, klijent prelazi u stanje „pozvan“, zatim „u toku“ kada usluga započne i „završen“ nakon završetka. Klijent može da otkaže prijavu dok čeka, a osoblje može da označi da se pozvani klijent nije pojavio.
-
-### 3. Pravila
-
-Klijent može imati samo jednu aktivnu prijavu u istom salonu, a prijavljivanje je dozvoljeno samo tokom radnog vremena salona. Kada se frizer oslobodi, sistem bira najranije prijavljenog klijenta čiju uslugu taj frizer može da obavi. Jedan frizer može istovremeno biti dodeljen samo jednom klijentu, a jedan klijent ne može biti dodeljen dvojici frizera. Pošto redosled i dostupnost frizera zavise od prijava drugih korisnika, konačnu proveru i dodelu obavlja server.
-
-### 4. Rad bez mreže
-
-Klijent može da zatraži otkazivanje svoje prijave u red čekanja i bez internet konekcije. Zahtev se čuva lokalno i automatski šalje serveru nakon ponovnog uspostavljanja veze. Server proverava da li je otkazivanje i dalje dozvoljeno, jer je klijent u međuvremenu mogao biti pozvan ili je usluga već započeta. Aplikacija zatim prikazuje rezultat sinhronizacije.
-
-### 5. Posao za osoblje
-
-Osoblje koristi backoffice aplikaciju za pregled i upravljanje redovima čekanja i dostupnošću frizera. Na većem ekranu prikazuju se svi prijavljeni klijenti, njihove pozicije i statusi, kao i trenutno slobodni i zauzeti frizeri. Osoblje može da pokrene automatsku dodelu sledećeg klijenta, označi početak i završetak usluge, evidentira nedolazak i prati promene stanja reda čekanja.
-
-### 6. Javni sadržaj
-
-Javni veb omogućava posetiocima da bez prijavljivanja pregledaju frizerske salone, njihove usluge, cenovnike, radno vreme i trenutno stanje reda čekanja, uključujući procenjeno vreme čekanja. Informacije o salonima i uslugama dostupne su internet pretraživačima kako bi korisnici mogli da pronađu odgovarajući salon pre instaliranja aplikacije.
+1. **Uloge.** Klijent pregleda salone, prijavljuje se u red i otkazuje svoju prijavu dok čeka. Osoblje upravlja dostupnošću frizera, početkom i završetkom usluge i nedolaskom klijenata.
+2. **Stanja.** Prijava može biti na čekanju, pozvana, u toku, završena, otkazana ili označena kao nedolazak. Zajednički domen određuje dozvoljene prelaze između stanja.
+3. **Pravila.** Klijent može imati najviše jednu aktivnu prijavu po salonu, prijavljivanje je dozvoljeno tokom radnog vremena, a napomena ima najviše 120 znakova. Automatska dodela bira najranijeg klijenta čiju uslugu slobodan frizer pruža, pa zavisi od drugih prijava i zauzetosti frizera; u serverskoj fazi konačnu proveru obavljaće server.
+4. **Rad bez mreže.** U KT3 planirano je lokalno čuvanje zahteva za otkazivanje i slanje po povratku mreže. Server će proveriti aktuelno stanje i moći da odbije otkazivanje ako je klijent u međuvremenu pozvan.
+5. **Posao za osoblje.** Backoffice prikazuje prijave, statuse, detalje i dostupnost frizera na većem ekranu. Osoblje koristi tastaturu i akcije za obradu reda, dok uži prozor prikazuje listu uz očuvan izbor prijave.
+6. **Javni sadržaj.** U KT4 planiran je javni veb sa salonima, uslugama, cenama, radnim vremenom i stanjem reda bez ličnih podataka klijenata. Taj sadržaj dostupan je i bez naloga i ima smisla za indeksiranje u pretraživačima.
 
 ## Delovi sistema
 
-| Deo                | Korisnici             | Tehnologija       | Platforme     |
-| ------------------ | --------------------- | ----------------- | ------------- |
-| Mobilna aplikacija | Klijenti              | Flutter           | Android, iOS  |
-| Backoffice         | Osoblje salona        | Flutter           | Windows, veb  |
-| Javni veb          | Svi posetioci         | Jaspr             | Pregledač     |
-| Server             | Ostali delovi sistema | Relic, PostgreSQL | Linux         |
-| Domenski paket     | Svi delovi sistema    | Dart              | Sve platforme |
+| Deo | Korisnici | Tehnologija | Platforme |
+| --- | --- | --- | --- |
+| Mobilna aplikacija | klijenti | Flutter | Android |
+| Backoffice | osoblje salona | Flutter | Windows, veb |
+| Domenski paket | oba klijenta | Dart | nezavisan od platforme |
 
-Svi delovi sistema koriste zajednički domenski paket napisan u Dartu, koji sadrži modele, stanja i poslovna pravila. Server čuva podatke, proverava ovlašćenja i upravlja automatskom raspodelom klijenata, vodeći računa o redosledu prijavljivanja, dostupnosti frizera i uslugama koje pružaju.
+Oba klijenta koriste isti domenski paket i Bloc. Svaki ima svoju implementaciju repozitorijuma sa nezavisnim podacima u memoriji; server i sinhronizacija između klijenata dolaze u narednim kontrolnim tačkama.
+
+## Pokretanje
+
+Provereno sa Flutter 3.47.7 i Dart 3.13.5. Za Android su potrebni Android SDK i emulator ili povezan uređaj; za Windows Visual Studio sa opcijom **Desktop development with C++**, a za veb Chrome ili Edge.
+
+Sve aplikacije i paketi pripadaju jednom pub workspace-u. Zavisnosti se preuzimaju iz korena projekta:
+
+```powershell
+flutter pub get
+flutter devices
+```
+
+Mobilna aplikacija, iz korena projekta, uz pokrenut Android emulator ili povezan telefon:
+
+```powershell
+cd apps/mobile
+flutter run -d <id-android-uredjaja>
+```
+
+Backoffice za Windows, iz zasebnog terminala u korenu projekta:
+
+```powershell
+cd apps/backoffice
+flutter run -d windows
+```
+
+Za veb, iz foldera `apps/backoffice`:
+
+```powershell
+flutter run -d chrome
+```
+
+ID Android uređaja prikazuje komanda `flutter devices`.
+
+Podaci su demo podaci u memoriji. Mobilna aplikacija koristi fiksnog klijenta Borisa, a backoffice fiksnog člana osoblja. Početni skup ima 17 prijava, od kojih 12 pripada Borisu, kroz svih šest stanja. Restart aplikacije vraća početne podatke; obično osvežavanje čuva promene.
+
+Za ponovljivo ponašanje demo sat je postavljen na **31.10.2026. u 12:00**, tokom radnog vremena salona. Zahtevi imaju kašnjenje od 550 ms. Meni **Demo kontrole** omogućava grešku narednog zahteva ili jednokratni prazan odgovor, za prikaz učitavanja, greške sa ponovnim pokušajem, praznog prikaza i podataka. U mobilnoj aplikaciji kontrole su dostupne na Profilu i ekranima sa zajedničkom gornjom trakom.
+
+## Struktura
+
+```text
+apps/mobile          mobilni klijent: saloni, forma, moje prijave i detalj
+apps/backoffice      osoblje: tabela/lista, detalj i dostupnost frizera
+packages/domain      modeli, ID tipovi, stanja, pravila i port repozitorijuma
+packages/use_cases   memorijski adapter, početni podaci i demo sat
+packages/blocs       zajednički QueueBloc, događaji i stanje
+packages/ui          tema, ikonice, poruke, splash i zajednički widgeti
+```
+
+Paketi `domain`, `use_cases` i `blocs` su čisti Dart, bez Flutter i platformskih zavisnosti. `blocs` i `use_cases` zavise od domena; aplikacije povezuju repozitorijume, Bloc i interfejs. Ekrani šalju događaje, a validacija i dozvoljene promene stanja nalaze se u domenu.
+
+## Provere
+
+Iz korena projekta:
+
+```powershell
+flutter analyze
+flutter test packages/domain/test packages/use_cases/test packages/blocs/test packages/ui/test apps/mobile/test apps/backoffice/test tools/kt1_acceptance_test.dart
+```
+
+Testovi pokrivaju pravila prijavljivanja i promene statusa, kompatibilnu dodelu frizera, konflikte, stanja učitavanja, forme, potvrde akcija, zamenu repozitorijuma, tastaturu i promenu širine prozora.
 
 ## Stanje projekta
 
-Projekat je u početnoj fazi razvoja. Funkcionalnosti će biti implementirane tokom semestra u skladu sa zahtevima kontrolnih tačaka iz predmeta Razvoj multiplatformskih aplikacija.
+**KT1 — dva klijenta nad istim domenom.** Mobilna aplikacija i backoffice rade sa zajedničkim modelima, pravilima i Bloc-om, uz podatke u memoriji. Prijava prelazi iz čekanja u pozvanu, zatim u uslugu u toku i završenu; podržani su i otkazivanje i nedolazak, uz tipizovane domenske greške i poruke na srpskom.
 
+Backoffice podržava izbor strelicama, `Ctrl+Enter` za početak/završetak usluge, `Ctrl+R` za osvežavanje i `Esc` za zatvaranje detalja. Sužavanje prozora menja tabelu u listu uz očuvan izbor. Server, autentifikacija, rad bez mreže i javni veb planirani su za naredne kontrolne tačke.

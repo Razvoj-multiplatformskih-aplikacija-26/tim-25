@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 12: 288 dp canvas; the 144 dp symbol stays inside its 192 dp mask. -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/launch_logo"
+    android:insetLeft="72dp"
+    android:insetTop="72dp"
+    android:insetRight="72dp"
+    android:insetBottom="72dp" />
