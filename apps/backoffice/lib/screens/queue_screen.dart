@@ -37,6 +37,7 @@ class _QueueScreenState extends State<QueueScreen> {
   Widget build(BuildContext context) => BlocBuilder<QueueBloc, QueueState>(
     builder: (context, state) {
       final bloc = context.read<QueueBloc>();
+      final session = SessionActions.of(context);
       void refresh() => bloc.add(const LoadQueue());
       return Scaffold(
         appBar: AppBar(
@@ -61,21 +62,31 @@ class _QueueScreenState extends State<QueueScreen> {
               tooltip: 'Osveži (Ctrl+R)',
               icon: const Icon(Icons.refresh),
             ),
-            PopupMenuButton<String>(
-              tooltip: 'Demo kontrole',
-              onSelected: (value) {
-                final repo = context.read<QueueRepository>();
-                if (repo is MemoryQueueStore) {
-                  if (value == 'error') repo.failNextRequest = true;
-                  if (value == 'empty') repo.emptyNextLoad = true;
-                  refresh();
-                }
-              },
-              itemBuilder: (_) => const [
-                PopupMenuItem(value: 'error', child: Text('Simuliraj grešku')),
-                PopupMenuItem(value: 'empty', child: Text('Prazan odgovor')),
-              ],
-            ),
+            if (session != null)
+              IconButton(
+                onPressed: session.onLogout,
+                tooltip: 'Odjavi se',
+                icon: const Icon(Icons.logout),
+              ),
+            if (session == null)
+              PopupMenuButton<String>(
+                tooltip: 'Demo kontrole',
+                onSelected: (value) {
+                  final repo = context.read<QueueRepository>();
+                  if (repo is MemoryQueueStore) {
+                    if (value == 'error') repo.failNextRequest = true;
+                    if (value == 'empty') repo.emptyNextLoad = true;
+                    refresh();
+                  }
+                },
+                itemBuilder: (_) => const [
+                  PopupMenuItem(
+                    value: 'error',
+                    child: Text('Simuliraj grešku'),
+                  ),
+                  PopupMenuItem(value: 'empty', child: Text('Prazan odgovor')),
+                ],
+              ),
           ],
         ),
         body: Focus(
@@ -96,7 +107,12 @@ class _QueueScreenState extends State<QueueScreen> {
             ),
             child: Column(
               children: [
-                const DemoBadge(staff: true),
+                if (session == null) const DemoBadge(staff: true),
+                if (session?.error case final error?)
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(errorMessage(error)),
+                  ),
                 if (state.busy) const LinearProgressIndicator(),
                 if (state.error != null && state.phase == LoadPhase.data)
                   Padding(

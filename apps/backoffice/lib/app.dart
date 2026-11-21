@@ -11,10 +11,14 @@ class FrizerajBackoffice extends StatefulWidget {
   const FrizerajBackoffice({
     super.key,
     this.repository,
+    this.actor,
+    this.onSessionExpired,
     this.initialLocation,
     this.minimumSplashDuration = StartupGate.defaultMinimumDisplayDuration,
   });
   final QueueRepository? repository;
+  final User? actor;
+  final VoidCallback? onSessionExpired;
   final String? initialLocation;
   final Duration minimumSplashDuration;
   @override
@@ -24,6 +28,7 @@ class FrizerajBackoffice extends StatefulWidget {
 class _FrizerajBackofficeState extends State<FrizerajBackoffice> {
   late final dependencies = BackofficeDependencies(
     repository: widget.repository,
+    actor: widget.actor,
   );
   late final router = createBackofficeRouter(
     initialLocation: widget.initialLocation,
@@ -46,7 +51,9 @@ class _FrizerajBackofficeState extends State<FrizerajBackoffice> {
             title: 'Frizeraj • osoblje',
             theme: frizerajTheme(),
             routerConfig: router,
-            builder: (context, child) => BlocBuilder<QueueBloc, QueueState>(
+            builder: (context, child) => BlocConsumer<QueueBloc, QueueState>(
+              listenWhen: (_, state) => state.error is SessionExpired,
+              listener: (_, _) => widget.onSessionExpired?.call(),
               builder: (context, state) => StartupGate(
                 minimumDisplayDuration: widget.minimumSplashDuration,
                 ready: state.phase == LoadPhase.data,

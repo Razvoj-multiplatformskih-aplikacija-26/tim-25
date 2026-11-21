@@ -27,11 +27,23 @@ class ProfileScreen extends StatelessWidget {
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 8),
-        const Text('Demo klijent · Beograd', textAlign: TextAlign.center),
-        const SizedBox(height: 28),
-        const Text(
-          'Ovo je demo verzija sa lokalnim podacima. Ocene, udaljenosti i procene čekanja služe za prikaz salona.',
+        Text(
+          SessionActions.of(context) == null
+              ? 'Demo klijent · Beograd'
+              : 'Klijent · Beograd',
+          textAlign: TextAlign.center,
         ),
+        const SizedBox(height: 28),
+        if (SessionActions.of(context) case final session?) ...[
+          if (session.error case final error?) Text(errorMessage(error)),
+          OutlinedButton(
+            onPressed: session.onLogout,
+            child: const Text('Odjavi se'),
+          ),
+        ] else
+          const Text(
+            'Ovo je demo verzija sa lokalnim podacima. Ocene, udaljenosti i procene čekanja služe za prikaz salona.',
+          ),
       ],
     ),
   );

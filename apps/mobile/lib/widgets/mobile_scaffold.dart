@@ -36,6 +36,7 @@ class MobileScaffold extends StatelessWidget {
   Widget build(BuildContext context) => BlocBuilder<QueueBloc, QueueState>(
     builder: (context, state) {
       final bloc = context.read<QueueBloc>();
+      final demo = SessionActions.of(context) == null;
       void refresh() => bloc.add(const LoadQueue());
       Widget body;
       if (state.phase == LoadPhase.loading) {
@@ -83,27 +84,28 @@ class MobileScaffold extends StatelessWidget {
                       tooltip: 'Osveži',
                       icon: const Icon(Icons.refresh),
                     ),
-                    PopupMenuButton<String>(
-                      tooltip: 'Demo kontrole',
-                      onSelected: (value) {
-                        final repo = context.read<QueueRepository>();
-                        if (repo is MemoryQueueStore) {
-                          if (value == 'error') repo.failNextRequest = true;
-                          if (value == 'empty') repo.emptyNextLoad = true;
-                          refresh();
-                        }
-                      },
-                      itemBuilder: (_) => const [
-                        PopupMenuItem(
-                          value: 'error',
-                          child: Text('Simuliraj grešku'),
-                        ),
-                        PopupMenuItem(
-                          value: 'empty',
-                          child: Text('Prazan odgovor'),
-                        ),
-                      ],
-                    ),
+                    if (demo)
+                      PopupMenuButton<String>(
+                        tooltip: 'Demo kontrole',
+                        onSelected: (value) {
+                          final repo = context.read<QueueRepository>();
+                          if (repo is MemoryQueueStore) {
+                            if (value == 'error') repo.failNextRequest = true;
+                            if (value == 'empty') repo.emptyNextLoad = true;
+                            refresh();
+                          }
+                        },
+                        itemBuilder: (_) => const [
+                          PopupMenuItem(
+                            value: 'error',
+                            child: Text('Simuliraj grešku'),
+                          ),
+                          PopupMenuItem(
+                            value: 'empty',
+                            child: Text('Prazan odgovor'),
+                          ),
+                        ],
+                      ),
                   ],
                 ),
           body: SafeArea(
@@ -111,7 +113,7 @@ class MobileScaffold extends StatelessWidget {
             bottom: false,
             child: Column(
               children: [
-                if (showDemoBadge) const DemoBadge(),
+                if (showDemoBadge && demo) const DemoBadge(),
                 if (state.busy && state.phase != LoadPhase.loading)
                   const LinearProgressIndicator(),
                 if (state.error != null &&

@@ -10,6 +10,7 @@ export 'src/startup/startup_gate.dart';
 export 'src/theme/colors.dart';
 export 'src/theme/app_theme.dart';
 export 'src/formatters/queue_labels.dart';
+export 'src/auth/session_gate.dart';
 export 'src/formatters/domain_error_messages.dart';
 export 'src/widgets/brand_mark.dart';
 export 'src/widgets/section_heading.dart';

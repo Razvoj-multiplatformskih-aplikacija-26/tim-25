@@ -1,0 +1,14 @@
+name: frizeraj_server
+publish_to: none
+environment:
+  sdk: ^3.13.5
+resolution: workspace
+dependencies:
+  api_contract: any
+  api_mapping: any
+  domain: any
+  use_cases: any
+  relic: 1.2.0
+  postgres: ^3.5.0
+  cryptography: ^2.9.0
+  timezone: ^0.10.1

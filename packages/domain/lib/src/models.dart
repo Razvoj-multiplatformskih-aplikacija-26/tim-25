@@ -141,14 +141,24 @@ final class QueueSnapshot {
     required Iterable<Service> services,
     required Iterable<Barber> barbers,
     required Iterable<QueueEntry> entries,
+    Map<QueueEntryId, int>? positions,
+    Map<SalonId, int>? waitingCounts,
+    this.businessTime,
   }) : salons = List.unmodifiable(salons),
        services = List.unmodifiable(services),
        barbers = List.unmodifiable(barbers),
-       entries = List.unmodifiable(entries);
+       entries = List.unmodifiable(entries),
+       positions = positions == null ? null : Map.unmodifiable(positions),
+       waitingCounts = waitingCounts == null
+           ? null
+           : Map.unmodifiable(waitingCounts);
   final List<Salon> salons;
   final List<Service> services;
   final List<Barber> barbers;
   final List<QueueEntry> entries;
+  final Map<QueueEntryId, int>? positions;
+  final Map<SalonId, int>? waitingCounts;
+  final DateTime? businessTime;
   QueueSnapshot copyWith({
     Iterable<Barber>? barbers,
     Iterable<QueueEntry>? entries,
@@ -157,5 +167,6 @@ final class QueueSnapshot {
     services: services,
     barbers: barbers ?? this.barbers,
     entries: entries ?? this.entries,
+    businessTime: businessTime,
   );
 }

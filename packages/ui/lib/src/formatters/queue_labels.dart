@@ -19,6 +19,8 @@ String serviceName(QueueSnapshot snapshot, ServiceId id) =>
     snapshot.services.where((s) => s.id == id).firstOrNull?.name ?? id.value;
 String salonName(QueueSnapshot snapshot, SalonId id) =>
     snapshot.salons.where((s) => s.id == id).firstOrNull?.name ?? id.value;
-String dateLabel(DateTime date) =>
-    '${date.day}.${date.month}.${date.year}. '
-    '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+String dateLabel(DateTime date) {
+  final local = date.toLocal();
+  return '${local.day}.${local.month}.${local.year}. '
+      '${local.hour.toString().padLeft(2, '0')}:${local.minute.toString().padLeft(2, '0')}';
+}

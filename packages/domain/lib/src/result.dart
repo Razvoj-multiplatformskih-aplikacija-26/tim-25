@@ -45,7 +45,24 @@ final class Conflict extends DomainError {
 }
 
 final class InvalidNote extends DomainError {
-  const InvalidNote();
+  const InvalidNote(this.maxLength);
+  final int maxLength;
+}
+
+final class SessionExpired extends DomainError {
+  const SessionExpired();
+}
+
+final class InvalidCredentials extends DomainError {
+  const InvalidCredentials();
+}
+
+final class WrongApplication extends DomainError {
+  const WrongApplication();
+}
+
+final class InvalidRequest extends DomainError {
+  const InvalidRequest();
 }
 
 final class RepositoryUnavailable extends DomainError {

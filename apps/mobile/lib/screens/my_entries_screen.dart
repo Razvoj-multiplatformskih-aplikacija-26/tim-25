@@ -3,7 +3,6 @@ import 'package:frizeraj_ui/frizeraj_ui.dart';
 import 'package:blocs/blocs.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:use_cases/use_cases.dart';
 
 import '../widgets/mobile_scaffold.dart';
 
@@ -15,8 +14,9 @@ class MyEntriesScreen extends StatelessWidget {
     title: 'Moje prijave',
     selectedIndex: 1,
     contentBuilder: (context, state, snapshot) {
+      final actor = context.read<QueueBloc>().actor;
       final entries =
-          snapshot.entries.where((e) => e.clientId == demoClient.id).toList()
+          snapshot.entries.where((e) => e.clientId == actor.id).toList()
             ..sort((a, b) => b.joinedAt.compareTo(a.joinedAt));
       if (entries.isEmpty) {
         return EmptyView(
