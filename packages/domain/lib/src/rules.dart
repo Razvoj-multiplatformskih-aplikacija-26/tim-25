@@ -4,7 +4,7 @@ import 'result.dart';
 
 const maxNoteLength = 120;
 Result<String> validateNote(String note) => note.trim().length > maxNoteLength
-    ? const Failure(InvalidNote())
+    ? const Failure(InvalidNote(maxNoteLength))
     : Success(note.trim());
 Result<void> validateJoinQueue({
   required QueueSnapshot snapshot,
@@ -57,6 +57,16 @@ Result<void> validateTransition(
   }
   return const Success(null);
 }
+
+bool canUseApplication(User actor, Role requiredRole) =>
+    actor.role == requiredRole;
+
+bool canChangeAvailability(User actor) => actor.role == Role.staff;
+
+bool canReadAllEntries(User actor) => actor.role == Role.staff;
+
+bool canReadEntry(User actor, QueueEntry entry) =>
+    canReadAllEntries(actor) || actor.id == entry.clientId;
 
 int compareQueueEntries(QueueEntry a, QueueEntry b) {
   final time = a.joinedAt.compareTo(b.joinedAt);

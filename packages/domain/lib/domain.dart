@@ -1,5 +1,6 @@
 library;
 
+export 'src/auth.dart';
 export 'src/identifiers.dart';
 export 'src/models.dart';
 export 'src/result.dart';

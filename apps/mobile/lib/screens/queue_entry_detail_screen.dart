@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:frizeraj_ui/frizeraj_ui.dart';
 import 'package:blocs/blocs.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:use_cases/use_cases.dart';
 
 import '../widgets/mobile_scaffold.dart';
 
@@ -16,8 +15,9 @@ class QueueEntryDetailScreen extends StatelessWidget {
     backPath: '/entries',
     selectedIndex: 1,
     contentBuilder: (context, state, snapshot) {
+      final actor = context.read<QueueBloc>().actor;
       final entry = snapshot.entries
-          .where((e) => e.id == entryId && e.clientId == demoClient.id)
+          .where((e) => e.id == entryId && canReadEntry(actor, e))
           .firstOrNull;
       if (entry == null) {
         return const Center(child: Text('Prijava nije pronađena.'));
@@ -37,7 +37,7 @@ class QueueEntryDetailScreen extends StatelessWidget {
               ],
             ),
           ),
-          if (validateTransition(entry, QueueStatus.cancelled, demoClient)
+          if (validateTransition(entry, QueueStatus.cancelled, actor)
               is Success<void>)
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 16),

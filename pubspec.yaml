@@ -4,11 +4,17 @@ publish_to: none
 
 # Workspace-level test and preview runner must collect both clients' assets.
 dev_dependencies:
+  api_contract: any
+  api_mapping: any
+  api_client: any
+  domain: any
+  http: ^1.5.0
   backoffice: any
   flutter:
     sdk: flutter
   flutter_test:
     sdk: flutter
+  frizeraj_ui: any
   mobile: any
   use_cases: any
 
@@ -25,3 +31,7 @@ workspace:
   - packages/use_cases
   - packages/blocs
   - packages/ui
+  - packages/api_contract
+  - packages/api_mapping
+  - packages/api_client
+  - apps/server

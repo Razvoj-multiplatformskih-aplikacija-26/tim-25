@@ -10,6 +10,11 @@ String errorMessage(DomainError error) => switch (error) {
   NotFound() => 'Traženi zapis nije pronađen.',
   Conflict() =>
     'Prijava je u međuvremenu promenjena. Osveži podatke i pokušaj ponovo.',
-  InvalidNote() => 'Napomena može imati najviše $maxNoteLength znakova.',
+  InvalidNote(:final maxLength) =>
+    'Napomena može imati najviše $maxLength znakova.',
+  SessionExpired() => 'Prijava je istekla. Prijavi se ponovo.',
+  InvalidCredentials() => 'Korisničko ime ili lozinka nisu ispravni.',
+  WrongApplication() => 'Ovaj nalog nije namenjen ovoj aplikaciji.',
+  InvalidRequest() => 'Zahtev nije ispravan. Proveri unos i pokušaj ponovo.',
   RepositoryUnavailable() => 'Podaci trenutno nisu dostupni. Pokušaj ponovo.',
 };

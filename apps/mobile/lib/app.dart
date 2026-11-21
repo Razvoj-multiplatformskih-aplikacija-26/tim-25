@@ -11,10 +11,14 @@ class FrizerajMobile extends StatefulWidget {
   const FrizerajMobile({
     super.key,
     this.repository,
+    this.actor,
+    this.onSessionExpired,
     this.initialLocation,
     this.minimumSplashDuration = StartupGate.defaultMinimumDisplayDuration,
   });
   final QueueRepository? repository;
+  final User? actor;
+  final VoidCallback? onSessionExpired;
   final String? initialLocation;
   final Duration minimumSplashDuration;
   @override
@@ -22,7 +26,10 @@ class FrizerajMobile extends StatefulWidget {
 }
 
 class _FrizerajMobileState extends State<FrizerajMobile> {
-  late final dependencies = MobileDependencies(repository: widget.repository);
+  late final dependencies = MobileDependencies(
+    repository: widget.repository,
+    actor: widget.actor,
+  );
   late final router = createMobileRouter(
     initialLocation: widget.initialLocation,
   );
@@ -44,7 +51,9 @@ class _FrizerajMobileState extends State<FrizerajMobile> {
             title: 'Frizeraj',
             theme: frizerajTheme(),
             routerConfig: router,
-            builder: (context, child) => BlocBuilder<QueueBloc, QueueState>(
+            builder: (context, child) => BlocConsumer<QueueBloc, QueueState>(
+              listenWhen: (_, state) => state.error is SessionExpired,
+              listener: (_, _) => widget.onSessionExpired?.call(),
               builder: (context, state) => StartupGate(
                 minimumDisplayDuration: widget.minimumSplashDuration,
                 ready: state.phase == LoadPhase.data,

@@ -68,12 +68,33 @@ final class QueueBloc extends Bloc<QueueEvent, QueueState> {
     }
     switch (result) {
       case Failure(:final error):
+        var updated = previous;
+        var failure = error;
+        if (!loading &&
+            error is! RepositoryUnavailable &&
+            error is! SessionExpired) {
+          try {
+            switch (await repository.load()) {
+              case Success(:final value):
+                updated = value;
+              case Failure(error: SessionExpired()):
+                failure = const SessionExpired();
+              case Failure():
+                break;
+            }
+          } catch (_) {}
+        }
         emit(
           QueueState(
-            phase: loading ? LoadPhase.failure : LoadPhase.data,
-            snapshot: previous,
-            selectedId: selected,
-            error: error,
+            phase: loading || updated == null
+                ? LoadPhase.failure
+                : LoadPhase.data,
+            snapshot: updated,
+            selectedId:
+                updated?.entries.any((entry) => entry.id == selected) == true
+                ? selected
+                : null,
+            error: failure,
           ),
         );
       case Success(:final value):
@@ -86,8 +107,8 @@ final class QueueBloc extends Bloc<QueueEvent, QueueState> {
                     e.salonId == event.salonId &&
                     e.status.isActive,
               )
-              .first
-              .id;
+              .firstOrNull
+              ?.id;
         }
         emit(
           QueueState(

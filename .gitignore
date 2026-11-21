@@ -1,4 +1,7 @@
 .dart_tool/
+.env
+.env.*
+!.env.example
 build/
 **/.dart_tool/
 **/build/

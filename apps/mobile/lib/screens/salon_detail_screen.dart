@@ -86,9 +86,12 @@ class SalonDetailScreen extends StatelessWidget {
                 const SizedBox(height: 28),
                 SectionHeading(
                   'Trenutni red',
-                  caption: '${waiting.length} aktivnih',
+                  caption: snapshot.waitingCounts == null
+                      ? '${waiting.length} aktivnih'
+                      : '${snapshot.waitingCounts![salon.id] ?? 0} na čekanju',
                 ),
-                if (waiting.isEmpty)
+                if (waiting.isEmpty &&
+                    (snapshot.waitingCounts?[salon.id] ?? 0) == 0)
                   const Text('Trenutno nema aktivnih prijava.'),
                 for (final entry in waiting)
                   ListTile(

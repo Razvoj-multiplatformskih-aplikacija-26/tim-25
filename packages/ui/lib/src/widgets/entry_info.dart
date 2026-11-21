@@ -11,7 +11,9 @@ class EntryInfo extends StatelessWidget {
   final QueueSnapshot snapshot;
   @override
   Widget build(BuildContext context) {
-    final position = queuePosition(entry, snapshot.entries);
+    final position = snapshot.positions == null
+        ? queuePosition(entry, snapshot.entries)
+        : snapshot.positions![entry.id];
     final barber = snapshot.barbers
         .where((b) => b.id == entry.barberId)
         .firstOrNull;

@@ -1,0 +1,11 @@
+name: api_client
+publish_to: none
+environment:
+  sdk: ^3.13.5
+resolution: workspace
+dependencies:
+  api_contract: any
+  api_mapping: any
+  domain: any
+  http: ^1.5.0
+  web: ^1.1.1

@@ -92,7 +92,7 @@ class MemoryQueueStore implements QueueRepository {
     required BarberAvailability availability,
   }) async {
     if (await _delayAndFail()) return const Failure(RepositoryUnavailable());
-    if (actor.role != Role.staff) return const Failure(Forbidden());
+    if (!canChangeAvailability(actor)) return const Failure(Forbidden());
     if (!_snapshot.barbers.any((b) => b.id == barberId)) {
       return const Failure(NotFound());
     }
